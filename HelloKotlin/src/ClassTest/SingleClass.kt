@@ -1,0 +1,4 @@
+package ClassTest
+
+class SingleClass {
+}
