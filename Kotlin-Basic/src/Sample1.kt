@@ -7,7 +7,7 @@ fun main() {
     checkNum(2)
     checkNum(4)
 }
-//1. 함수 생성
+//1. 함수 생성 
 fun helloKotlin(): Unit { // Unit는 생략가능
     println("Hello Kotlin-Basic!")
 }
