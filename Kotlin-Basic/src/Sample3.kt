@@ -19,7 +19,6 @@ fun main() {
 }
 
 // 7. 클래스
-
 //상속을 위해서는 open 키워드 추가
 open class Human constructor (name:String="Anonymous") { //주 생성자 constructor 키워드는 생략 가능함
 
@@ -32,7 +31,6 @@ open class Human constructor (name:String="Anonymous") { //주 생성자 constru
         //this 예약어를 사용해서 주 생성자를 상속받아야 함.
         println("나는 ${name}이고 ${age}살이야")
     }
-
     val name = name
 
     //메소드 오버라이딩을 위해서는 open키워드 추가 필요
@@ -72,6 +70,9 @@ fun lambdaExtensionExample() {
     val lambdaHumanTypeInference2: (String, Int) -> String = { name, age ->
         "람다_타입추론2) ${name}는 영원한 ${age}세"
     }
+    val lambdaOneParam: (Int) -> String = {
+        "람다_파라미터_1개) ${it}세" // 파라미터가 1개일경우 it으로 대체 가능
+    }
     fun methodHuman(name: String, age: Int): String {
         return "메소드) ${name}는 영원한 ${age}세 "
     }
@@ -79,16 +80,27 @@ fun lambdaExtensionExample() {
     println(lambdaHuman("NANA", 17)) // 람다) NANA는 영원한 17세
     println(lambdaHumanTypeInference1("NANA", 17)) // 람다_타입추론1) NANA는 영원한 17세
     println(lambdaHumanTypeInference2("NANA", 17)) // 람다_타입추론2) NANA는 영원한 17세
+    println(lambdaOneParam(17)) // 람다_파라미터_1개) 17세
     println(methodHuman("NANA", 17)) // 메소드) NANA는 영원한 17세
 
     // 메소드에서 인자로 람다 사용하기
-    fun lambdaInFun(name: String, age: Int, idx:Int, lambda : (String, Int) -> String): String {
+    fun lambdaInFun(name: String, age: Int, info:String, lambda : (String, Int) -> String): String {
         val strSplit = lambda(name, age).split(")", limit = 2)
-        return "인자로_람다받기${idx}) ${strSplit[1]}"
+        return "${info})${strSplit[1]}"
     }
-    println(lambdaInFun("NANA", 17, 1, lambdaHuman)) // 인자로_람다받기1) NANA는 영원한 17세
-    println(lambdaInFun("NANA", 17, 2,
-        {n:String, a:Int -> "람다리터럴) ${n}는 영원한 ${a}세"})) // 인자로_람다받기2) NANA는 영원한 17세
+    println(lambdaInFun("NANA", 17, "인자로_람다받기", lambdaHuman)) // 인자로_람다받기) NANA는 영원한 17세
+    println(lambdaInFun("NANA", 17, "람다_리터럴",
+        {n:String, a:Int -> "정보) ${n}는 영원한 ${a}세"})) // 람다_리터럴) NANA는 영원한 17세
+
+    // 람다 밖으로 꺼내기 (trailing lambda)
+    // 메소드의 가장 마지막 인자가 람다일 경우 인자들 밖으로 꺼낼 수 있음
+    println(lambdaInFun("NANA", 17, "람다_꺼내기")
+    {n:String, a:Int -> "정보) ${n}는 영원한 ${a}세"}) // 람다_꺼내기) NANA는 영원한 17세
+    // ※인자가 람다 하나일 경우 괄호 생략 가능
+    fun onlyOneLambdaFun(lam : ()-> String): String {
+        return "${lam()} ※거짓말 입니다"
+    }
+    println(onlyOneLambdaFun{"17세"}) // 17세 ※거짓말 입니다
 
     // 확장함수
     // 프로퍼티, 클래스 등을 상속 없이 간단하게 확장할때 사용되며 메소드가 실제 생성되는것은 아님
